@@ -1,43 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <parser.h>
 #include <string.h>
 
 int main(int argc, char *argv[]){
 
-    int errnum;
-    FILE *rawLog = NULL;
-
-    //Verifies whether it is a different log or the default one
+    #ifdef _WIN32
+    char command[300] = "findstr killed ";
+    #elif
+    char command[300] = "grep killed ";
+    #endif
+    //Verifies whether it is a different log or a default one
     if(argc > 1) {
         printf("Parsing %s file\n", argv[1]);
-        rawLog = fopen(argv[1], "r");
+        strcat(command, argv[1]);
+        strcat(command, " >> processedlog.txt");
     }
     else {
-        printf("Parsing default log on logs/quakelog.txt\n");
-        rawLog = fopen("../logs/quakelog.txt", "r");
+        printf("Parsing default log on quakelog.txt\n");
+        strcat(command, "quakelog.txt >> processedlog.txt");
     }
+    printf("%s\n", command);
 
-    //Verifies it the file was opened and if it is really a quake3 log (has at least 1 death)
-    if(rawLog == NULL){
-        errnum = errno;
-        fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
-        return 2;
-    }
+    #ifdef _WIN32
+        popen(command, "w");
+    #elif __linux__
+        popen(command, "w");
+    #endif
 
-
-    /* TODO
-    if(1){
-        FILE *cmd = popen("grep InitGame qgames.txt", "r");
-        if (cmd != NULL) {
-            errnum = errno;
-            printf("File is not an Quake3 log.\n");
-            exit(3);
-        }
-        pclose(cmd);
-    }
-    */
-
-    scanf(" ");
-    return 2;
+    printf("Processed log generated\n");
+    return 0;
 }
