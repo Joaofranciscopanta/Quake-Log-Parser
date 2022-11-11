@@ -10,14 +10,14 @@ int main(int argc, char *argv[]){
     char command[300] = "grep killed ";
     #endif
     //Verifies whether it is a different log or a default one
-    if(argc > 1) {
+    if(argc >= 2) {
         printf("Parsing %s file\n", argv[1]);
         strcat(command, argv[1]);
-        strcat(command, " >> processedlog.txt");
+        strcat(command, " > processedlog.txt");
     }
     else {
         printf("Parsing default log on quakelog.txt\n");
-        strcat(command, "quakelog.txt >> processedlog.txt");
+        strcat(command, "quakelog.txt > processedlog.txt");
     }
     printf("%s\n", command);
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     #elif __linux__
         popen(command, "w");
     #endif
-
-    printf("Processed log generated\n");
+    scanf(" ");
+    printf("Processed log generated, press Enter...\n");
     return 0;
 }
