@@ -1,0 +1,6 @@
+#ifndef MY_LOG_PARSER_REPORT_H
+#define MY_LOG_PARSER_REPORT_H
+
+
+
+#endif //MY_LOG_PARSER_REPORT_H
