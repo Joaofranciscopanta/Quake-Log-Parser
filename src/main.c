@@ -1,32 +1,32 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <parser.h>
 
 int main(int argc, char *argv[]){
 
     #ifdef _WIN32
-    char command[300] = "findstr killed ";
+    char killlogCommand[300] = "findstr killed ";
     #elif
-    char command[300] = "grep killed ";
+    char killlogCommand[300] = "grep killed ";
     #endif
+
+
     //Verifies whether it is a different log or a default one
     if(argc >= 2) {
         printf("Parsing %s file\n", argv[1]);
-        strcat(command, argv[1]);
-        strcat(command, " > processedlog.txt");
+        strcat(killlogCommand, argv[1]);
+        strcat(killlogCommand, " > killslog.txt");
     }
     else {
         printf("Parsing default log on quakelog.txt\n");
-        strcat(command, "quakelog.txt > processedlog.txt");
+        strcat(killlogCommand, "quakelog.txt > killslog.txt");
     }
-    printf("%s\n", command);
 
     #ifdef _WIN32
-        popen(command, "w");
+        popen(killlogCommand, "w");
     #elif __linux__
-        popen(command, "w");
+        popen(killlogCommand, "w");
     #endif
-    scanf(" ");
-    printf("Processed log generated, press Enter...\n");
+
+    printf("Processed log generated, press enter to parse!\n");
+    parse();
     return 0;
 }
