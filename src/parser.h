@@ -6,5 +6,5 @@ struct Match;
 struct Game;
 struct Player;
 void parse();
-void proccessLine(char**, struct Game*);
+void proccessLine(char **words, struct Game *game);
 #endif //MY_LOG_PARSER_PARSER_H

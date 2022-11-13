@@ -1,8 +1,9 @@
 #include <malloc.h>
+#include <stdbool.h>
 #include "parser.h"
 
 #define MAX_SPACES 2
-#define MAX_MATCHES 5
+#define MAX_MATCHES 25
 #define MAX_PLAYERS 16
 
 struct Game{
@@ -12,7 +13,6 @@ struct Game{
 struct Match{
     int number;
     struct Player *players;
-    int minutes;
     int totalkills;
 };
 
@@ -23,21 +23,23 @@ struct Player{
 };
 
 void parse(){
-    FILE *logs = fopen("processedlog.txt","r+");
-    char logLine[80];
+    FILE *logs = fopen("processedlog.txt","r");
+    char logLine[500];
     char **words;
     int counter;
+
     //Allocating an array of strings
     words = malloc(sizeof(char*)* (9 + (MAX_SPACES*2)));
     for(int index=0;index< 9 + (MAX_SPACES*2); index++)
-        words[index]=malloc(sizeof(char)*60);
+        words[index]=malloc(sizeof(char)*600);
 
     //Game represents an array of matches.
     struct Game game;
-    //Dynamically allocates an array of 10 matches.
+    //Dynamically allocates an array of MAX_MATCHES.
     game.matches = malloc(sizeof(struct Match)*MAX_MATCHES);
-    //Dynamically allocates memory for the maximum player capacity;
+    //Dynamically allocates memory for MAX_PLAYERS.
     game.matches->players = malloc(sizeof (struct Player)*MAX_PLAYERS);
+    game.matches->number = 0;
 
     //Transforming the logLine string into array of strings(words)
     while(!feof(logs)){
@@ -45,28 +47,33 @@ void parse(){
         counter = 0;
 
         words[0] = strtok(logLine," ");
-        for(counter = 1;counter<= 9 + (MAX_SPACES*2); counter++)
+
+        //Separate logLine string into word substrings
+        for(counter = 1;counter<= 9 + (MAX_SPACES*2); counter++) {
             words[counter] = strtok(NULL, " ");
+        }
 
         //proccessLine turns an array of strings(words) into information
-        if(words[strlen( words) - 1] != NULL)
+        if(words[strlen((const char *) words) - 1] != NULL) {
             proccessLine(words, &game);
+        }
     }
-
-
 }
+
 /* This block turns an array of words into score based on victims and kills
  * This score is then sent into generateInfo() which stores that information
  */
-void proccessLine(char** words, struct Game *game) {
-    char time[5];
-    char timeAux[5];
+void proccessLine(char **words, struct Game *game) {
     char *victim = malloc(sizeof(char)*60);
     char *killer = malloc(sizeof(char)*60);
-    char *causeOfDeath = malloc(sizeof(char)* 40);
+    char *causeOfDeath;
     int counter;
 
-    //looping around words[] to find the killer
+    if(strcmp(words[1],"InitGame:") == 0) {
+        game->matches->number++;
+        return;
+    }
+        //looping around words[] to find the killer
     for(counter = 0; strcmp(words[counter], "killed") != 0; counter++ ){
         if (words[counter] == NULL || words[counter - 1] == NULL) continue;
         if (strcmp(words[counter], "Kill:") == 0) {
@@ -90,14 +97,14 @@ void proccessLine(char** words, struct Game *game) {
         strcat(victim,words[counter]);
 
     }
-    //Finding cause of death by adding 1 to the counter since the victim loop stops at "by"
+
+    //Finding cause of death by adding 1 to the counter since the victim loop above stops at "by"
     causeOfDeath = words[counter+1];
 
     //Removing \r at the end of causeOfDeath
-    int len= strlen(causeOfDeath);
+    int len=(int) strlen(causeOfDeath);
     causeOfDeath[len-1] = 0;
 
-    //printf("%s matou %s com %s no jogo %d \n", killer, victim, causeOfDeath, game.match);
-    printf("%s matou %s com %s\n", killer, victim, causeOfDeath);
+    printf("%s matou %s com %s no jogo %d \n", killer, victim, causeOfDeath, game->matches->number);
     //Generate Info
 }
