@@ -1,13 +1,16 @@
 #include <malloc.h>
 #include "parser.h"
+
 #define MAX_SPACES 2
 #define MAX_MATCHES 5
 #define MAX_PLAYERS 16
+
 struct Game{
     struct Match *matches;
 };
 
 struct Match{
+    int number;
     struct Player *players;
     int minutes;
     int totalkills;
@@ -25,8 +28,8 @@ void parse(){
     char **words;
     int counter;
     //Allocating an array of strings
-    words = malloc(sizeof(char*)* (8 + (MAX_SPACES*2)));
-    for(int index=0;index< 8 + (MAX_SPACES*2); index++)
+    words = malloc(sizeof(char*)* (9 + (MAX_SPACES*2)));
+    for(int index=0;index< 9 + (MAX_SPACES*2); index++)
         words[index]=malloc(sizeof(char)*60);
 
     //Game represents an array of matches.
@@ -42,48 +45,59 @@ void parse(){
         counter = 0;
 
         words[0] = strtok(logLine," ");
-        for(counter = 1;counter<= 8 + (MAX_SPACES*2); counter++)
+        for(counter = 1;counter<= 9 + (MAX_SPACES*2); counter++)
             words[counter] = strtok(NULL, " ");
 
         //proccessLine turns an array of strings(words) into information
-        if(words[strlen((const char *) words) - 1] != NULL)
+        if(words[strlen( words) - 1] != NULL)
             proccessLine(words, &game);
     }
 
 
 }
 /* This block turns an array of words into score based on victims and kills
- * This score is then sent into processkills() which stores that information
+ * This score is then sent into generateInfo() which stores that information
  */
 void proccessLine(char** words, struct Game *game) {
     char time[5];
     char timeAux[5];
-    char *victim = malloc(sizeof(char)*40);
-    char *killer = malloc(sizeof(char)*40);
+    char *victim = malloc(sizeof(char)*60);
+    char *killer = malloc(sizeof(char)*60);
     char *causeOfDeath = malloc(sizeof(char)* 40);
+    int counter;
 
-
-
-    for(int newPointer = 0; strcmp(words[newPointer], "killed") != 0; newPointer++ ){
-        if (words[newPointer] == NULL || words[newPointer - 1] == NULL) continue;
-        if (strcmp(words[newPointer], "Kill:") == 0) {
-            newPointer += 4 ;
-            strcpy(killer,words[newPointer]);
+    //looping around words[] to find the killer
+    for(counter = 0; strcmp(words[counter], "killed") != 0; counter++ ){
+        if (words[counter] == NULL || words[counter - 1] == NULL) continue;
+        if (strcmp(words[counter], "Kill:") == 0) {
+            counter += 4 ;
+            strcpy(killer,words[counter]);
             continue;
         }
         strcat(killer," ");
-        strcat(killer,words[newPointer]);
+        strcat(killer,words[counter]);
     }
 
-    for(int newPointer = 0; strcmp(words[newPointer], "by") != 0; newPointer++ ){
-        if (words[newPointer] == NULL || words[newPointer - 1] == NULL) continue;
-        if (strcmp(words[newPointer], "killed") == 0) {
-            newPointer += 1;
-            strcpy(victim,words[newPointer]);
+    //Looping around words[] to find the victim
+    for(counter = 0; strcmp(words[counter], "by") != 0; counter++ ){
+        if (words[counter] == NULL || words[counter - 1] == NULL) continue;
+        if (strcmp(words[counter], "killed") == 0) {
+            counter += 1;
+            strcpy(victim,words[counter]);
             continue;
         }
         strcat(victim," ");
-        strcat(victim,words[newPointer]);
+        strcat(victim,words[counter]);
+
     }
-    printf("%s matou %s \n", killer, victim);
+    //Finding cause of death by adding 1 to the counter since the victim loop stops at "by"
+    causeOfDeath = words[counter+1];
+
+    //Removing \r at the end of causeOfDeath
+    int len= strlen(causeOfDeath);
+    causeOfDeath[len-1] = 0;
+
+    //printf("%s matou %s com %s no jogo %d \n", killer, victim, causeOfDeath, game.match);
+    printf("%s matou %s com %s\n", killer, victim, causeOfDeath);
+    //Generate Info
 }
