@@ -1,10 +1,9 @@
 #ifndef MY_LOG_PARSER_PARSER_H
 #define MY_LOG_PARSER_PARSER_H
-#include <stdio.h>
-#include <string.h>
-struct Match;
-struct Game;
-struct Player;
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <game.h>
 void parse();
-void proccessLine(char **words, struct Game *game);
+void processLine(char **words, Game *game, Match *);
 #endif //MY_LOG_PARSER_PARSER_H
