@@ -19,13 +19,12 @@ void parse(){
 
     //Allocating an array of strings
     words =(char**) malloc(sizeof(char*)* (9 + (MAX_SPACES*2)));
-    for(int index=0;index< 9 + (MAX_SPACES*2); index++)
+    for(int index=0;index <= 9 + (MAX_SPACES*2); index++)
         words[index]=(char*) malloc(sizeof(char)*600);
 
     //Transforming the logLine string into array of strings(words)
     while(!feof(logs)){
         fgets(logLine, sizeof(logLine), logs);
-        counter = 0;
 
         //Separate logLine string into word substrings
         words[0] = strtok(logLine," ");
@@ -34,18 +33,15 @@ void parse(){
         }
 
         //processLine turns an array of strings(words) into information
-        if(words[strlen((const char *) words) - 1] != nullptr) {
+        if(words[strlen((const char *) words)-1] != nullptr) {
             processLine(words, &game, &auxMatch);
             continue;
         }
-
-        //Final match of the file
-        endMatch(&game,&auxMatch);
-
     }
-    //Freeing dinamically allocated memory
-    for(int index=0;index< 9 + (MAX_SPACES*2); index++)
-        free(words[index]);
+    //Final match of the file (not delimited by "InitGame:")
+    endMatch(&game,&auxMatch);
+
+    //words[index] array will be also be free'd by leaving the function's scope
     free(words);
     fclose(logs);
 }
@@ -105,13 +101,11 @@ void processLine(char **words, Game *game, Match *auxMatch) {
     //Removing suicides by splash damage
     if(strcmp(killer,victim)==0) return;
 
-    //
     for(counter = 0; counter< auxMatch->players.size(); counter++){
         if(auxMatch->players.at(counter).name == killer){
             auxMatch->players.at(counter).kills++;
         }
     }
-
 }
 
 void endMatch(Game *game, Match *match){
