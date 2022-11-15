@@ -41,8 +41,6 @@ void parse(){
     //Final match of the file (not delimited by "InitGame:")
     endMatch(&game,&auxMatch);
 
-    //words[index] array will be also be free'd by leaving the function's scope
-    free(words);
     fclose(logs);
 }
 
