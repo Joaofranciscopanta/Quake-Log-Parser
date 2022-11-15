@@ -5,7 +5,7 @@
 
 void parse(){
     FILE *logs = fopen("processedlog.txt","r");
-    char logLine[500];
+    char logLine[450];
     char **words;
     int counter;
 
@@ -36,8 +36,17 @@ void parse(){
         //processLine turns an array of strings(words) into information
         if(words[strlen((const char *) words) - 1] != nullptr) {
             processLine(words, &game, &auxMatch);
+            continue;
         }
+
+        //Final match of the file
+        endMatch(&game,&auxMatch);
+
     }
+    //Freeing dinamically allocated memory
+    for(int index=0;index< 9 + (MAX_SPACES*2); index++)
+        free(words[index]);
+    free(words);
     fclose(logs);
 }
 
@@ -52,27 +61,10 @@ void processLine(char **words, Game *game, Match *auxMatch) {
 
     //Increments match counter and stores a match on Game's matches vector
     if(strcmp(words[1],"InitGame:") == 0) {
-
-        //Printing a report
-        cout << "End of match number " << game->ongoingMatch << " \n";
-        cout << "Total kills: " << auxMatch->totalKills << "\n";
-        cout << "Players on this match: \n";
-        for(Player p: auxMatch->players ) cout << p.name << " with " << p.kills <<" kills\n";
-        cout <<"\n\n\n";
-
-        //Create definiteMatch to store in Game's matches vector
-        Match definiteMatch = *new Match();
-        definiteMatch.players = auxMatch->players;
-        definiteMatch.totalKills = auxMatch->totalKills;
-        game->matches.insert(game->matches.end(),definiteMatch);
-        //Incrementing the matchcounter
-        game->incrementOngoingMatch();
-
-        //Resetting auxMatch
-        auxMatch->players.clear();
-        auxMatch->totalKills = 0;
+        endMatch(game, auxMatch);
         return;
     }
+
     auxMatch->totalKills++;
     //looping around words[] to find the killer
     for(counter = 0; strcmp(words[counter], "killed") != 0; counter++ ){
@@ -105,7 +97,6 @@ void processLine(char **words, Game *game, Match *auxMatch) {
 
     //Finding cause of death by adding 1 to the counter since the victim loop above stops at "by"
     causeOfDeath = words[counter+1];
-    //cout << killer <<  " killed " << victim << " on game " << game->ongoingMatch << "\n";
 
     //Removing \r at the end of causeOfDeath
     int len=(int) strlen(causeOfDeath);
@@ -114,10 +105,38 @@ void processLine(char **words, Game *game, Match *auxMatch) {
     //Removing suicides by splash damage
     if(strcmp(killer,victim)==0) return;
 
+    //
     for(counter = 0; counter< auxMatch->players.size(); counter++){
         if(auxMatch->players.at(counter).name == killer){
             auxMatch->players.at(counter).kills++;
         }
     }
 
+}
+
+void endMatch(Game *game, Match *match){
+
+    //Printing a match report
+    cout << "End of match number " << game->ongoingMatch << " \n";
+    cout << "Total kills: " << match->totalKills << "\n";
+    cout << "Players on this match: \n";
+    for(Player p: match->rankPlayers() ) {
+        if(p.name == "<world>") continue;
+        cout << p.name << " with " << p.kills << " kills\n";
+    }
+    cout <<"\n\n";
+
+    //Create definiteMatch to store in Game's matches vector
+    Match definiteMatch = *new Match();
+    definiteMatch.players = match->players;
+    definiteMatch.totalKills = match->totalKills;
+    //Inserts definite
+    game->matches.insert(game->matches.end(),definiteMatch);
+
+    //Increment the matchcounter
+    game->incrementOngoingMatch();
+
+    //Resetting auxMatch
+    match->players.clear();
+    match->totalKills = 0;
 }

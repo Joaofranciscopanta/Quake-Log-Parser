@@ -6,4 +6,5 @@
 #include <game.h>
 void parse();
 void processLine(char **words, Game *game, Match *);
+void endMatch(Game *, Match *);
 #endif //MY_LOG_PARSER_PARSER_H

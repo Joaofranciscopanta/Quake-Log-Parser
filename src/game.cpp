@@ -27,6 +27,13 @@ bool Match::isPlayerAdded(const string& name) {
     return false;
 }
 
+vector<Player> Match::rankPlayers() const {
+    vector<Player> auxList = players;
+    std::sort(auxList.begin(),auxList.end());
+    std::reverse(auxList.begin(),auxList.end());
+    return auxList;
+}
+
 
 //Game class functions
 void Game::incrementOngoingMatch() {

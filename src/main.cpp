@@ -1,11 +1,13 @@
 #include <parser.h>
+#include <limits>
 
 int main(int argc, char *argv[]){
 
+    //Native call to filter lines
     #ifdef _WIN32
     char processRawLog[300] = "findstr \"killed InitGame:\" ";
     #elif
-    char processRawLog[300] = "grep killed ";
+    char processRawLog[300] = "grep \"killed InitGame:\" ";
     #endif
 
     //Verifies whether it is a different log or a default one
@@ -18,13 +20,14 @@ int main(int argc, char *argv[]){
         printf("Parsing default log on quakelog.txt\n");
         strcat(processRawLog, "quakelog.txt > processedlog.txt");
     }
+
     #ifdef _WIN32
         popen(processRawLog, "w");
     #elif __linux__
         popen(processRawLog, "w");
     #endif
 
-    printf("Processed log generated, parsing...\n");
+    printf("Processed log generated, press ENTER to start parsing...\n");
     //A "Press enter to continue" cin use
     //std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     parse();
