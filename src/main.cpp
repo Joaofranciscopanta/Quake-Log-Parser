@@ -10,9 +10,9 @@ int main(int argc, char *argv[]){
 
     //Native call to filter lines
     #ifdef _WIN32
-    char processRawLog[300] = "findstr \"killed InitGame:\" ";
+        char processRawLog[300] = "findstr \"killed InitGame:\" ";
     #elif
-    char processRawLog[300] = "grep \"killed InitGame:\" ";
+        char processRawLog[300] = "grep \"killed InitGame:\" ";
     #endif
 
     //Verifies whether it is a different log or a default one
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
         popen(processRawLog, "w");
     #endif
 
+
     //A "Press enter to continue" cin use
     printf("Processed log generated, press ENTER to start parsing...\n");
     startWait=clock();
@@ -47,16 +48,15 @@ int main(int argc, char *argv[]){
         open("rm processedlog.txt", "w");
     #endif
 
+    //Returns quakelog to /logs
+    if(argc < 2) std::filesystem::rename("quakelog.txt", "../logs/quakelog.txt");
+
     //Measuring time
     end = clock();
     double totalTime = double(end - start) / double (CLOCKS_PER_SEC);
     double waitTime = double(endWait - startWait) / double (CLOCKS_PER_SEC);
     cout << "Time taken to parse is : " << fixed
-         << totalTime-waitTime << setprecision(5);
+         << totalTime-waitTime << setprecision(3);
     cout << " seconds. " << endl;
-
-    //Returns quakelog to /logs
-    std::filesystem::rename("quakelog.txt", "../logs/quakelog.txt");
-
     return 0;
 }

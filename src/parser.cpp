@@ -4,7 +4,7 @@
 #define MAX_SPACES 3
 
 void parse(){
-    FILE *logs = fopen("processedlog.txt","r");
+    FILE *logs = fopen("processedlog.txt","r+");
     char logLine[450];
     char **words;
     int counter;
@@ -28,19 +28,17 @@ void parse(){
 
         //Separate logLine string into word substrings
         words[0] = strtok(logLine," ");
-        for(counter = 1;counter<= 9 + (MAX_SPACES*2); counter++) {
+        for(counter = 1;counter<= 9 + (MAX_SPACES*2); counter++)
             words[counter] = strtok(nullptr, " ");
-        }
 
         //processLine turns an array of strings(words) into information
-        if(words[strlen((const char *) words)-1] != nullptr) {
+        if(words[strlen((const char *) words)-1] != nullptr)
             processLine(words, &game, &auxMatch);
-            continue;
-        }
     }
-    //Final match of the file (not delimited by "InitGame:")
+
     endMatch(&game,&auxMatch);
     printReport(&game);
+    printCausesOfDeath(&game);
     fclose(logs);
 }
 
@@ -58,8 +56,8 @@ void processLine(char **words, Game *game, Match *auxMatch) {
         endMatch(game, auxMatch);
         return;
     }
-
     auxMatch->totalKills++;
+
     //looping around words[] to find the killer
     for(counter = 0; strcmp(words[counter], "killed") != 0; counter++ ){
         if (words[counter] == nullptr || words[counter - 1] == nullptr) continue;
@@ -85,30 +83,43 @@ void processLine(char **words, Game *game, Match *auxMatch) {
         strcat(victim," ");
         strcat(victim,words[counter]);
     }
-    if(!auxMatch->isPlayerAdded(victim) && victim != killer) {
+    if(!auxMatch->isPlayerAdded(victim))
         auxMatch->addPlayer(victim);
-    }
 
     //Finding cause of death by adding 1 to the counter since the victim loop above stops at "by"
     causeOfDeath = words[counter+1];
 
-    //Removing \r at the end of causeOfDeath
+
     int len=(int) strlen(causeOfDeath);
     causeOfDeath[len-1] = 0;
 
-    //Removing suicides by splash damage
-    if(strcmp(killer,victim)==0) return;
+    if(!auxMatch->isCauseAdded(causeOfDeath))
+        auxMatch->addCause(causeOfDeath);
 
-    for(counter = 0; counter< auxMatch->players.size(); counter++){
-        if(auxMatch->players.at(counter).name == killer){
-            auxMatch->players.at(counter).kills++;
+    if((strcmp(killer,victim)==0)) return;
+
+    for(counter = 0; counter< auxMatch->causes.size(); counter++){
+        if(auxMatch->causes.at(counter).name == causeOfDeath){
+            auxMatch->causes.at(counter).kills++;
+
         }
+
     }
+    //Count playerkills
+    for(counter = 0; counter< auxMatch->players.size(); counter++)
+        if(auxMatch->players.at(counter).name == killer)
+            auxMatch->players.at(counter).kills++;
+
+    if(strcmp(killer,"<world>")==0)
+        for(counter = 0; counter< auxMatch->players.size(); counter++)
+            if(auxMatch->players.at(counter).name == victim && auxMatch->players.at(counter).kills > 0)
+                auxMatch->players.at(counter).kills--;
 }
 
 void endMatch(Game *game, Match *match){
 
     //Printing a match report
+    /*
     cout << "End of match number " << game->ongoingMatch << endl;
     cout << "Total kills: " << match->totalKills << endl;
     cout << "Players on this match: \n";
@@ -117,11 +128,19 @@ void endMatch(Game *game, Match *match){
         cout << p.name << " with " << p.kills << " kills\n";
     }
     cout <<endl;
+    cout << "Top means of death: \n";
+    for(CauseOfDeath c: match->rankCauseOfDeath() ) {
+        cout << c.name << " with " << c.kills << " kills\n";
+    }
+    cout <<endl;
+     */
 
     //Create definiteMatch to store in Game's matches vector
     Match definiteMatch = *new Match();
     definiteMatch.players = match->players;
+    definiteMatch.causes = match->causes;
     definiteMatch.totalKills = match->totalKills;
+
     //Inserts definite
     game->matches.insert(game->matches.end(),definiteMatch);
 
@@ -131,4 +150,7 @@ void endMatch(Game *game, Match *match){
     //Resetting auxMatch
     match->players.clear();
     match->totalKills = 0;
+    for(auto & cause : match->causes){
+        cause.kills=0;
+    }
 }
