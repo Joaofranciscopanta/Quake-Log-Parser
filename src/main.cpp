@@ -1,6 +1,6 @@
 #include <parser.h>
 #include <ctime>
-#include <limits>
+#include <filesystem>
 
 int main(int argc, char *argv[]){
 
@@ -22,7 +22,8 @@ int main(int argc, char *argv[]){
         strcat(processRawLog, " > processedlog.txt");
     }
     else {
-        printf("Parsing default log this folder\n");
+        printf("Parsing default log on this folder\n");
+        std::filesystem::rename("../logs/quakelog.txt", "quakelog.txt");
         strcat(processRawLog, "quakelog.txt > processedlog.txt");
     }
 
@@ -53,6 +54,9 @@ int main(int argc, char *argv[]){
     cout << "Time taken to parse is : " << fixed
          << totalTime-waitTime << setprecision(5);
     cout << " seconds. " << endl;
+
+    //Returns quakelog to /logs
+    std::filesystem::rename("quakelog.txt", "../logs/quakelog.txt");
 
     return 0;
 }
