@@ -10,7 +10,7 @@ This project was made as a test for a Quality Engineer position at CloudWalk, wi
 - C++ programming expresses capability of troubleshooting and finding a root cause for errors, attributes which are, in my opinion, very important for the position.
 
 ## Implementation idea
-1. Use a OS native function to filter usefull lines from the original log;
+1. Use a OS native function to filter useful lines from the original log;
 2. Compare string pointers from between non-variant parts of the log("Kill:", "killed", "by");
 3. Store substrings between those words in classes using c++'s OOP;
 4. Manipulate and rank that information.
