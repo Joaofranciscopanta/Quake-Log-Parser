@@ -1,7 +1,12 @@
 #include <parser.h>
+#include <ctime>
 #include <limits>
 
 int main(int argc, char *argv[]){
+
+    clock_t start, end;
+    clock_t startWait, endWait;
+    start = clock();
 
     //Native call to filter lines
     #ifdef _WIN32
@@ -17,7 +22,7 @@ int main(int argc, char *argv[]){
         strcat(processRawLog, " > processedlog.txt");
     }
     else {
-        printf("Parsing default log on quakelog.txt\n");
+        printf("Parsing default log this folder\n");
         strcat(processRawLog, "quakelog.txt > processedlog.txt");
     }
 
@@ -27,9 +32,27 @@ int main(int argc, char *argv[]){
         popen(processRawLog, "w");
     #endif
 
-    printf("Processed log generated, press ENTER to start parsing...\n");
     //A "Press enter to continue" cin use
-    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    printf("Processed log generated, press ENTER to start parsing...\n");
+    startWait=clock();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    endWait=clock();
+
     parse();
+
+    #ifdef _WIN32
+        popen("del processedlog.txt", "w");
+    #elif __linux__
+        open("rm processedlog.txt", "w");
+    #endif
+
+    //Measuring time
+    end = clock();
+    double totalTime = double(end - start) / double (CLOCKS_PER_SEC);
+    double waitTime = double(endWait - startWait) / double (CLOCKS_PER_SEC);
+    cout << "Time taken to parse is : " << fixed
+         << totalTime-waitTime << setprecision(5);
+    cout << " seconds. " << endl;
+
     return 0;
 }

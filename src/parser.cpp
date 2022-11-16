@@ -40,7 +40,7 @@ void parse(){
     }
     //Final match of the file (not delimited by "InitGame:")
     endMatch(&game,&auxMatch);
-
+    printReport(&game);
     fclose(logs);
 }
 
@@ -109,14 +109,14 @@ void processLine(char **words, Game *game, Match *auxMatch) {
 void endMatch(Game *game, Match *match){
 
     //Printing a match report
-    cout << "End of match number " << game->ongoingMatch << " \n";
-    cout << "Total kills: " << match->totalKills << "\n";
+    cout << "End of match number " << game->ongoingMatch << endl;
+    cout << "Total kills: " << match->totalKills << endl;
     cout << "Players on this match: \n";
     for(Player p: match->rankPlayers() ) {
         if(p.name == "<world>") continue;
         cout << p.name << " with " << p.kills << " kills\n";
     }
-    cout <<"\n\n";
+    cout <<endl;
 
     //Create definiteMatch to store in Game's matches vector
     Match definiteMatch = *new Match();
