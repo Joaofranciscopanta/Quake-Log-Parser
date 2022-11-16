@@ -14,4 +14,5 @@ This project was made as a test for a Quality Engineer position at CloudWalk, wi
 2. Compare string pointers from between non-variant parts of the log("Kill:", "killed", "by");
 3. Store substrings between those words in classes using c++'s OOP;
 4. Manipulate and rank that information.
-[Implementation Idea](flowchart.png)
+
+![alt text](flowchart.png "Flowchart diagram")
