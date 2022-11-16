@@ -9,10 +9,22 @@ This project was made as a test for a Quality Engineer position at CloudWalk, wi
 - Being a low level language, C++ code is faster as it gets compilled instantly to machine code, so its an efficient programming language for a parser.
 - C++ programming expresses capability of troubleshooting and finding a root cause for errors, attributes which are, in my opinion, very important for the position.
 
-## Implementation idea
+## Input
+My-Log-Parser will accept any quake3 log file as input, if opened without an initial input, it will open _quakelog_ at _logs_ folder.
+
+## Output
+After parsing, My-Log-Parser will create two .txt files, _causesofdeath.txt_ and _matchresults.txt_, respectively, the ranked causes of death of each match and the results from each match.
+
+## Implementation plan
 1. Use a OS native function to filter useful lines from the original log;
-2. Compare string pointers from between non-variant parts of the log("Kill:", "killed", "by");
+2. Compare string pointers from between non-variant parts of the log("Kill:", "killed" and "by");
 3. Store substrings between those words in classes using c++'s OOP;
-4. Manipulate and rank that information.
+4. Manipulate information at will.
+5. Print file with ranked information
 
 ![alt text](flowchart.png "Flowchart diagram")
+
+## TODOs
+- Adapt main function to receive multiple log files.
+- Adapt algoryth to accept player names using non-variant words of the log.
+
