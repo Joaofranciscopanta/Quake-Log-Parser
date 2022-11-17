@@ -1,9 +1,8 @@
-#include <report.h>
+#include "include/report.h"
 #define MATCHESVECTOR game->matches[matchCounter]
 #define RANKEDPLAYERS game->matches[matchCounter].rankPlayers()
 
 void printReport(Game * game){
-
     ofstream output;
     output.open("../output/matchresults.json");
     for(int matchCounter = 0; matchCounter <= game->ongoingMatch; matchCounter++){

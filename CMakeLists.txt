@@ -3,6 +3,9 @@ project(my_log_parser CXX)
 
 set(CMAKE_C_STANDARD 17)
 
-include_directories(src)
+add_subdirectory(src)
+add_subdirectory(tests)
 
-add_executable(my_log_parser src/parser.cpp src/parser.h src/game.cpp src/game.h src/main.cpp src/report.cpp src/report.h )
+enable_testing()
+
+add_executable(my_log_parser src/myparser.cpp src/include/myparser.h src/game.cpp src/include/game.h src/main.cpp src/report.cpp src/include/report.h )

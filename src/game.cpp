@@ -1,7 +1,5 @@
-#include "game.h"
+#include "include/game.h"
 using namespace std;
-
-
 
 //Match class functions
 
@@ -18,7 +16,6 @@ void Match::addCause(const string& name) {
     causes.insert(causes.end(),cause);
 }
 
-//Verifies if player is already inserted into vector
 bool Match::isPlayerAdded(const string& name) {
     for(Player p : players)
         if (p.name == name)
