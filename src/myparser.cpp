@@ -113,7 +113,7 @@ string detectVictim(vector<string> words){
 void endMatch(Game *game, Match *match){
 
     //Printing a match report
-
+    /*
     cout << "End of match number " << game->ongoingMatch << endl;
     cout << "Total kills: " << match->totalKills << endl;
     cout << "Players on this match: \n";
@@ -122,6 +122,7 @@ void endMatch(Game *game, Match *match){
         cout << p.name << " with " << p.kills << " kills\n";
     }
     cout <<endl;
+    */
     /*
     cout << "Top means of death: \n";
     for(CauseOfDeath c: match->rankCauseOfDeath() ) {
