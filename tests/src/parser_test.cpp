@@ -21,6 +21,16 @@ TEST(NameDetecSuite, killerNameTest_II){
     ASSERT_TRUE("Dono da Bola" == killer);
 }
 
+TEST(NameDetecSuite, killerNameTest_III){
+    string sentence = "21:42 Kill: 1022 2 22: Kill: killed Isgalamido by MOD_TRIGGER_HURT";
+    stringstream ssSentence(sentence);
+    vector<string> wordVector;
+    string word;
+    while(ssSentence >> word) wordVector.insert(wordVector.end(), word);
+    string killer = detectKiller(wordVector);
+    ASSERT_TRUE("Kill:" == killer);
+}
+
 TEST(NameDetecSuite, victimNameTest_I){
     string sentence = "21:42 Kill: 1022 2 22: <world> killed Isgalamido by MOD_TRIGGER_HURT";
     stringstream ssSentence(sentence);
@@ -39,6 +49,17 @@ TEST(NameDetecSuite, victimNameTest_II){
     while(ssSentence >> word) wordVector.insert(wordVector.end(), word);
     string victim = detectVictim(wordVector);
     ASSERT_TRUE("Assasinu Credi" == victim);
+}
+
+//This test reflects a possible error on the algorythm, crashing when a player's name is the same as a non-variant part of the log
+TEST(NameDetecSuite, victimNameTest_III){
+    string sentence = "  7:12 Kill: 2 5 7: Dono da Bola killed killed by by MOD_ROCKET_SPLASH";
+    stringstream ssSentence(sentence);
+    vector<string> wordVector;
+    string word;
+    while(ssSentence >> word) wordVector.insert(wordVector.end(), word);
+    string victim = detectVictim(wordVector);
+    ASSERT_TRUE("killed by" == victim);
 }
 
 TEST(NameDetecSuite, causeDetecTest){
@@ -83,27 +104,8 @@ TEST(ProcessSuite, processLineTest){
     ASSERT_TRUE(match.players.empty());
     ASSERT_FALSE(match.players.size()==2);
     ASSERT_ANY_THROW(match.players.at(0).name);
-
 }
 
-TEST(ProcessSuite, failTests){
-    Game game = *new Game();
-    Match match = *new Match();
-
-    string sentence = "  6:35 Kill: 2 4 6: Dono Kill: Bola killed Zeh by MOD_ROCKET";
-    ASSERT_ANY_THROW(processLine(sentence, &game, &match));
-
-    sentence = "  6:35 Kill: 2 4 6: Dono da Bola killed killed by MOD_ROCKET";
-    ASSERT_ANY_THROW(processLine(sentence, &game, &match));
-    stringstream ssSentence(sentence);
-    vector<string> wordVector;
-    string word;
-    while(ssSentence >> word) wordVector.insert(wordVector.end(), word);
-    ASSERT_ANY_THROW(string killer = detectKiller(wordVector));
-
-    sentence = "  6:35 Kill: 2 4 6: D o n o da B o l a killed Zeh by MOD_ROCKET";
-    ASSERT_ANY_THROW(processLine(sentence, &game, &match));
-}
 
 
 int main(){
