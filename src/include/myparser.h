@@ -9,6 +9,8 @@
 void parse();
 void processLine(string words, Game *game, Match *);
 void endMatch(Game *, Match *);
+
+string detectCauseOfDeath(vector<string> words);
 string detectKiller(vector<string> words);
 string detectVictim(vector<string> words);
 

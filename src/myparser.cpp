@@ -8,7 +8,6 @@ void parse(){
     string words;
     int counter;
 
-
     //Game is the main data structure for this parser, encapsulates an array of matches and a match counter
     Game game = *new Game();
     Match auxMatch = *new Match();
@@ -34,8 +33,8 @@ void processLine(string sentence, Game *game, Match *auxMatch) {
     int counter;
 
     //Tokenize string
-    stringstream wordVector199(sentence);
-    while(wordVector199 >> auxWord)
+    stringstream ssSentence(sentence);
+    while(ssSentence >> auxWord)
         wordVector.insert(wordVector.end(), auxWord);
 
     //Increments match counter and stores a match on Game's matches vector
@@ -53,7 +52,7 @@ void processLine(string sentence, Game *game, Match *auxMatch) {
     victim = detectVictim(wordVector);
     if(!auxMatch->isPlayerAdded(victim))
         auxMatch->addPlayer(victim);
-    if(killer==victim) return;
+
 
     for(counter = 0; wordVector.at(counter)!= "by"; counter++);
     //Finding cause of death by adding 1 to the counter since the victim loop above stops at "by"
@@ -70,6 +69,7 @@ void processLine(string sentence, Game *game, Match *auxMatch) {
             auxMatch->causes.at(counter).kills++;
     }
 
+    if(killer==victim) return;
     //Count playerkills and treats <world> kills
     for(counter = 0; counter< auxMatch->players.size(); counter++) {
         if (auxMatch->players.at(counter).name == killer)
@@ -80,6 +80,11 @@ void processLine(string sentence, Game *game, Match *auxMatch) {
             if (auxMatch->players.at(counter).name == victim && auxMatch->players.at(counter).kills > 0)
                 auxMatch->players.at(counter).kills--;
     }
+}
+string detectCauseOfDeath(vector<string> words){
+    int counter;
+    for(counter = 0; words.at(counter)!= "by"; counter++);
+    return words.at(counter+1);
 }
 
 string detectKiller(vector<string> words) {
