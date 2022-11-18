@@ -110,6 +110,7 @@ TEST(ProcessSuite, processLineTest){
 
 int main(){
     testing::InitGoogleTest();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     return RUN_ALL_TESTS();
 }
 

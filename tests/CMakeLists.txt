@@ -12,9 +12,9 @@ add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 add_executable(parse_test src/parser_test.cpp
-        ../../src/myparser.cpp
-        ../../src/game.cpp
-        ../../src/include/game.h
-        ../../src/report.cpp
-        ../../src/include/report.h)
+        src/myparser.cpp
+        src/game.cpp
+        src/include/game.h
+        src/report.cpp
+        src/include/report.h)
 target_link_libraries(parse_test PRIVATE GTest::GTest)

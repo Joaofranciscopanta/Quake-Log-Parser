@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     }
     else {
         printf("Parsing default log on this folder\n");
-        std::filesystem::rename("logs/quakelog.txt", "quakelog.txt");
+        std::filesystem::rename("../logs/quakelog.txt", "quakelog.txt");
         strcat(processRawLog, "quakelog.txt > processedlog.txt");
     }
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     #endif
 
     //Returns quakelog to /logs
-    if(argc < 2) std::filesystem::rename("quakelog.txt", "logs/quakelog.txt");
+    if(argc < 2) std::filesystem::rename("quakelog.txt", "../logs/quakelog.txt");
 
     //Measuring time
     end = clock();
@@ -58,8 +58,5 @@ int main(int argc, char *argv[]){
     cout << "Time taken to parse is : " << fixed
          << totalTime-waitTime << setprecision(3);
     cout << " seconds. " << endl;
-
-    printf("Parsing complete, press ENTER to exit...\n");
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     return 0;
 }

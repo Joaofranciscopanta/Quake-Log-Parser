@@ -4,7 +4,7 @@
 
 void printReport(Game * game){
     ofstream output;
-    output.open("output/matchresults.json");
+    output.open("../output/matchresults.json");
     for(int matchCounter = 0; matchCounter <= game->ongoingMatch; matchCounter++){
         output <<"\"game_"  << matchCounter << "\": {\n";
         output << "\"total_kills\":" << MATCHESVECTOR.totalKills << ",\n";
@@ -25,7 +25,7 @@ void printReport(Game * game){
 }
 void printCausesOfDeath(Game * game){
     ofstream output;
-    output.open("output/causesofdeath.json");
+    output.open("../output/causesofdeath.json");
     for(int matchCounter = 0; matchCounter <= game->ongoingMatch; matchCounter++){
         output <<"\"game_"  << matchCounter << "\": {\n";
         output << "  \"kills_by_means\": {\n";
