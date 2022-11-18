@@ -15,6 +15,16 @@ My-Log-Parser will accept any quake3 log file as input, if opened without an ini
 ## Output
 After parsing, My-Log-Parser will create two .txt files, _causesofdeath.txt_ and _matchresults.txt_, respectively, the ranked causes of death of each match and the results from each match.
 
+# Build Dependencies
+- Ninja, which can be installed by chocolatey's "choco install ninja";
+- CMake for build automation, downloaded on https://cmake.org/download/;
+- G++ installed on PATH;
+
+## Build commands 
+1. "cd my-log-parser"
+2. "cmake . -G Ninja"
+3. "cmake --build ."
+
 ## Implementation plan
 1. Use a OS native function to filter useful lines from the original log;
 2. Compare string pointers from between non-variant parts of the log("Kill:", "killed" and "by");
