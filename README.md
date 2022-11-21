@@ -36,5 +36,5 @@ After parsing, My-Log-Parser will create two .txt files, _causesofdeath.txt_ and
 
 ## TODOs
 - Adapt main function to receive multiple log files.
-- Adapt algoryth to accept player names using non-variant words of the log.
+- Adapt algorithm to accept player names using non-variant words of the log.
 - Create docker image.
