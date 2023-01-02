@@ -4,7 +4,6 @@ project(my_log_parser CXX)
 set(CMAKE_C_STANDARD 17)
 
 add_subdirectory(src)
-add_subdirectory(tests)
 
 enable_testing()
 

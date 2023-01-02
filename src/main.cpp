@@ -1,6 +1,7 @@
 #include "include/myparser.h"
 #include <ctime>
 #include <filesystem>
+#include <sys/stat.h>
 
 int main(int argc, char *argv[]){
 
@@ -23,9 +24,15 @@ int main(int argc, char *argv[]){
     }
     else {
         printf("Parsing default log on this folder\n");
+        if(!std::filesystem::exists("logs/quakelog.txt")) {
+            printf("Error! quakelog.txt is nonexistent, press ENTER to quit...\n");
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+            return 2001;
+        }
         std::filesystem::rename("logs/quakelog.txt", "quakelog.txt");
         strcat(processRawLog, "quakelog.txt > processedlog.txt");
     }
+
 
     #ifdef _WIN32
         popen(processRawLog, "w");
@@ -58,6 +65,7 @@ int main(int argc, char *argv[]){
     cout << "Time taken to parse is : " << fixed
          << totalTime-waitTime << setprecision(3);
     cout << " seconds. " << endl;
+
 
     printf("Parsing complete, press ENTER to exit...\n");
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
