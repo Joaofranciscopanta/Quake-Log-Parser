@@ -2,7 +2,7 @@
 A Quake III log parser, written in C and C++.
 
 ## About the project:
-This project was made as a test for a Quality Engineer position at CloudWalk, with the intent of measuring my general software engineering skills.
+This project was made as a test for a DevOps Engineer position at CloudWalk, with the intent of measuring my general software engineering skills.
 
 ## Programming language choice:
 - As a fan of John Carmack's magnum opus and its legacy, i could not write this parser on a language different than C++.
@@ -24,6 +24,10 @@ After parsing, My-Log-Parser will create two .txt files, _causesofdeath.txt_ and
 1. "cd my-log-parser"
 2. "cmake . -G Ninja"
 3. "cmake --build ."
+
+## Docker Build
+1. Run the image with docker build -t parser
+2. Then run the container with docker run -it --rm parser /bin/bash
 
 ## Implementation plan
 1. Use a OS native function to filter useful lines from the original log;
