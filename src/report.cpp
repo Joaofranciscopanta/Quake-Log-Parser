@@ -1,38 +1,60 @@
 #include "include/report.h"
-#define MATCHESVECTOR game->matches[matchCounter]
-#define RANKEDPLAYERS game->matches[matchCounter].rankPlayers()
+#include <iomanip>  // Para std::fixed e std::setprecision
 
 void printReport(Game * game){
     ofstream output;
     output.open("output/matchresults.json");
+    output << std::fixed << std::setprecision(2); // Formatação de números
+
     for(int matchCounter = 0; matchCounter <= game->ongoingMatch; matchCounter++){
+        if (matchCounter >= game->matches.size()) {
+            cerr << "Warning: matchCounter " << matchCounter << " exceeds the size of matches vector." << endl;
+            continue;
+        }
+
+        auto& match = game->matches[matchCounter];
         output <<"\"game_"  << matchCounter << "\": {\n";
-        output << "\"total_kills\":" << MATCHESVECTOR.totalKills << ",\n";
-        output << "\"players\": [";
-        for(int playerCounter = 0; playerCounter < MATCHESVECTOR.players.size(); playerCounter++){
-            if(MATCHESVECTOR.players[playerCounter].name == "<world>") continue;
-            output << "\"" << MATCHESVECTOR.players[playerCounter].name << "\"";
-            if(playerCounter != MATCHESVECTOR.players.size()-1) output << ", ";
+        output << "  \"total_kills\": " << match.totalKills << ",\n";
+        output << "  \"players\": [";
+        for(size_t playerCounter = 0; playerCounter < match.players.size(); playerCounter++){
+            if(match.players[playerCounter].name == "<world>") continue;
+            output << "\"" << match.players[playerCounter].name << "\"";
+            if(playerCounter != match.players.size() - 1) output << ", ";
         }
         output << "],\n";
-        output << "\"kills\": {\n";
-        for(int playerCounter = 0; playerCounter < MATCHESVECTOR.players.size(); playerCounter++){
-            if(RANKEDPLAYERS[playerCounter].name == "<world>") continue;
-            output << "  \"" << RANKEDPLAYERS[playerCounter].name << "\": " << RANKEDPLAYERS[playerCounter].kills <<",\n";
+        output << "  \"kills\": {\n";
+        for(size_t playerCounter = 0; playerCounter < match.players.size(); playerCounter++){
+            if(match.rankPlayers()[playerCounter].name == "<world>") continue;
+            output << "    \"" << match.rankPlayers()[playerCounter].name << "\": " << match.rankPlayers()[playerCounter].kills;
+            if (playerCounter != match.players.size() - 1) output << ",\n";
         }
-        output << "  }\n" << "}\n\n" ;
+        output << "\n  }\n}\n\n";
     }
+
+    output.close();
 }
+
 void printCausesOfDeath(Game * game){
     ofstream output;
     output.open("output/causesofdeath.json");
+    output << std::fixed << std::setprecision(2); // Formatação de números
+
     for(int matchCounter = 0; matchCounter <= game->ongoingMatch; matchCounter++){
+        if (matchCounter >= game->matches.size()) {
+            cerr << "Warning: matchCounter " << matchCounter << " exceeds the size of matches vector." << endl;
+            continue;
+        }
+
+        auto& match = game->matches[matchCounter];
         output <<"\"game_"  << matchCounter << "\": {\n";
         output << "  \"kills_by_means\": {\n";
-        for(int causesCounter = 0; causesCounter < MATCHESVECTOR.causes.size(); causesCounter++){
-            if(MATCHESVECTOR.rankCauseOfDeath()[causesCounter].name == "<world>") continue;
-            output << "  \"" << MATCHESVECTOR.rankCauseOfDeath()[causesCounter].name << "\": " << MATCHESVECTOR.rankCauseOfDeath()[causesCounter].kills << ",\n";
+        for(size_t causesCounter = 0; causesCounter < match.causes.size(); causesCounter++){
+            if(match.rankCauseOfDeath()[causesCounter].name == "<world>") continue;
+            output << "    \"" << match.rankCauseOfDeath()[causesCounter].name << "\": " << match.rankCauseOfDeath()[causesCounter].kills;
+            if (causesCounter != match.causes.size() - 1) output << ",\n";
         }
-        output << "  }\n" << "}\n\n" ;
+        output << "\n  }\n}\n\n";
     }
+
+    output.close();
 }

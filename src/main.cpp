@@ -9,14 +9,15 @@ int main(int argc, char *argv[]){
     clock_t startWait, endWait;
     start = clock();
 
-    //Native call to filter lines
+
     #ifdef _WIN32
         char processRawLog[300] = "findstr \"killed InitGame:\" ";
-    #elif
-        char processRawLog[300] = "grep \"killed InitGame:\" ";
+    #elif __linux__
+        char processRawLog[300];
+        snprintf(processRawLog, sizeof(processRawLog), "grep -E \"Kill: | InitGame:\" ");
     #endif
 
-    //Verifies whether it is a different log or a default one
+
     if(argc >= 2) {
         printf("Parsing %s file\n", argv[1]);
         strcat(processRawLog, argv[1]);
@@ -41,7 +42,6 @@ int main(int argc, char *argv[]){
     #endif
 
 
-    //A "Press enter to continue" cin use
     printf("Processed log generated, press ENTER to start parsing...\n");
     startWait=clock();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
@@ -50,15 +50,13 @@ int main(int argc, char *argv[]){
     parse();
 
     #ifdef _WIN32
-        popen("del processedlog.txt", "w");
+        //popen("del processedlog.txt", "w");
     #elif __linux__
-        open("rm processedlog.txt", "w");
+        //open("rm processedlog.txt", "w");
     #endif
 
-    //Returns quakelog to /logs
     if(argc < 2) std::filesystem::rename("quakelog.txt", "logs/quakelog.txt");
 
-    //Measuring time
     end = clock();
     double totalTime = double(end - start) / double (CLOCKS_PER_SEC);
     double waitTime = double(endWait - startWait) / double (CLOCKS_PER_SEC);

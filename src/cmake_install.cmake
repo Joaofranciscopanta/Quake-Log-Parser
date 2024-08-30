@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/joaof/CLionProjects/folder/my-log-parser/src
+# Install script for directory: C:/Users/Administrator/Desktop/Quake-Log-Parser/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,8 +32,8 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set default install directory permissions.
+# Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/ProgramData/chocolatey/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "C:/ProgramData/mingw64/mingw64/bin/objdump.exe")
 endif()
 
