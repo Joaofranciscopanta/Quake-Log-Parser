@@ -146,7 +146,7 @@
   1:35 Item: 3 weapon_railgun
   1:38 Item: 2 item_health_large
   1:38 Item: 3 weapon_railgun
-  1:41 Kill: 1022 2 19: <world> killed Dono da Bola by MOD_FALLING
+  1:41 Kill: 1022 2 19: <world> killed D ono d a Bola by MOD_FALLING
   1:41 Item: 3 weapon_railgun
   1:43 Item: 2 ammo_rockets
   1:44 Item: 2 weapon_rocketlauncher
